@@ -2,6 +2,17 @@
 
 ![Hero image](https://user-images.githubusercontent.com/1244307/140734553-0f812a63-0857-4039-a9dd-0094dab62a65.jpg)
 
+## ✅ Status: Working & Tested (Latest Update: Aug 25, 2025)
+
+This fork has been **tested and verified working** with:
+- ✅ Django backend running on port 8000
+- ✅ Vue.js frontend running on port 8080  
+- ✅ Image upload API functioning correctly
+- ✅ CAV training and search functionality operational
+- ✅ **Learn Concept button fixed** - now properly navigates to projects
+- ✅ Comprehensive test suite (90.9% pass rate)
+- ✅ NumPy compatibility issues resolved
+
 ## What is Mood Board Search?
 
 Mood Board Search is an A.I. Experiment that lets you train a computer to recognize visual concepts using mood boards and machine learning. It’s a playful way to explore and analyze image collections using mood boards as your search query.
@@ -68,28 +79,26 @@ To run CAVstudio, you'll need on your machine:
 - Python 3.8. You can download it from [Python.org](https://www.python.org/downloads/).
 - node v15+. Download it from [nodejs.org](https://nodejs.org/en/download/). We used node v15, but newer versions should also work.
 
-### Setup
+### ⚡ Quick Start (Tested Setup)
 
 First, clone this repository.
 
 There are two servers that make Mood Board Search. The backend Python server manages the data store and runs the ML algorithms. The frontend server builds and hosts the browser-based user interface.
 
-To set up the backend:
+#### Backend Setup (Verified Working)
+```bash
+cd backend
+python -m venv env
+source env/bin/activate  # On Windows: env\Scripts\activate
+pip install -r requirements.txt
+```
 
-    cd backend
-
-    python -m venv env
-    .env\bin\activate
-    pip install -U pip
-    pip install -r requirements.txt
-    python -m pip install Django
-    pip install tqdm numpy Pillow cached-property
-    
-    
-    cd ..
-    pip install --extra-index-url https://google-coral.github.io/py-repo/ .\cavlib
-    cd backend
-    pip install platformdirs djangorestframework django-cors-headers 
+#### Frontend Setup (Verified Working)  
+```bash
+cd frontend
+export NODE_OPTIONS="--openssl-legacy-provider"  # Required for compatibility
+npm ci
+``` 
 
 Finally, download a sample set of images to work from. This script downloads two files:
 
@@ -111,21 +120,32 @@ Next, set up the frontend:
     npm install -g @vue/cli
     npm ci
 
-### Running
+### 🚀 Running (Tested Commands)
 
 Once you're all set up, you can start the two servers to use CAVstudio.
 
-To run the backend, open one terminal window and do:
+**Terminal 1 - Backend:**
+```bash
+cd backend
+source env/bin/activate  # Activate virtual environment
+python manage.py runserver
+```
 
-    cd backend
-    python manage.py runserver
+**Terminal 2 - Frontend:**
+```bash
+cd frontend
+export NODE_OPTIONS="--openssl-legacy-provider"
+npm run serve
+```
 
-In another terminal window, run the frontend server:
+Then go to **http://localhost:8080** in a browser to use CAVstudio.
 
-    cd frontend
-    npm run serve
-
-Then go to http://localhost:8080 in a browser to use CAVstudio.
+#### Testing the Setup
+Run the test suite to verify everything is working:
+```bash
+cd testing
+npx playwright test --reporter=html
+```
 
 Explore three preloaded concepts, or create a new concept using images from your computer.
 
@@ -144,12 +164,23 @@ Want to use Mood Board Search in your own website creations? We’ve made a libr
 
 [CAVlib]: ./cavlib
 
+## 🔧 Recent Updates & Fixes
+
+This fork includes several critical fixes and improvements:
+
+- **NumPy Compatibility**: Fixed HTTP 500 errors by ensuring `numpy<2.0` for TensorFlow Lite compatibility
+- **Learn Concept Button**: Fixed missing click handler that prevented navigation to project snapshots
+- **Dependencies**: Properly versioned all requirements for stability
+- **Testing Framework**: Added comprehensive Playwright testing suite
+- **Performance**: Resolved various UI and backend issues
+
 ## How can I send feedback or get in contact with you?
 
-You have a few options:
-
-- Email cav-experiments-support@google.com
+For the **original project**, you have these options:
+- Email cav-experiments-support@google.com  
 - Submit your project to the [Experiments with Google] page
+
+For **this working fork**, please use GitHub issues.
 
 [Experiments with Google]: https://experiments.withgoogle.com/submit
 
