@@ -147,6 +147,59 @@ cd testing
 npx playwright test --reporter=html
 ```
 
+## 🔧 Troubleshooting
+
+### Common Issues and Solutions
+
+#### "Try Concept" Button Not Working
+**Problem:** Button appears but doesn't navigate when clicked.
+**Status:** ✅ **FIXED** in this version
+**Solution:** This issue has been resolved. The button now properly navigates to project snapshots.
+
+#### Frontend Build Errors (NODE_OPTIONS)
+**Problem:** Build fails with OpenSSL errors
+**Solution:**
+```bash
+export NODE_OPTIONS="--openssl-legacy-provider"
+npm run serve
+```
+
+#### NumPy Version Conflicts
+**Problem:** HTTP 500 errors from backend
+**Status:** ✅ **FIXED** - Requirements now specify `numpy<2.0`
+**Solution:** Ensure you use the fixed requirements.txt file
+
+#### Port Conflicts
+**Problem:** "Port already in use" errors
+**Solution:**
+```bash
+# Check what's using the ports
+lsof -i :8000  # Backend
+lsof -i :8080  # Frontend
+
+# Kill processes if needed
+pkill -f "manage.py runserver"
+pkill -f "npm run serve"
+```
+
+#### Missing CAV Files (404 errors)
+**Problem:** Backend logs show 404 errors for .cav files
+**Solution:** This is normal for new installations - CAV files are created when you train concepts.
+
+### Verification Commands
+
+Test your setup with these commands:
+```bash
+# Test backend
+curl http://localhost:8000/api/ping_cav_server
+
+# Test frontend
+curl http://localhost:8080/
+
+# Run automated tests
+cd testing && npx playwright test
+```
+
 Explore three preloaded concepts, or create a new concept using images from your computer.
 
 To create a new concept:
