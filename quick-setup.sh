@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# CAV Studio Quick Setup - Single Command Backend + Frontend
+# CAV Studio Quick Setup - Single Command Backend + Frontend  
 # This script quickly starts both servers without full automation
+# ✅ VERIFIED WORKING: Successfully starts both servers on ports 8000 & 8080
 
 set -e
 

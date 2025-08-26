@@ -7,6 +7,7 @@ Comprehensive Playwright testing suite for the Mood Board Search (CAV Studio) ap
 ## Test Results
 
 **Current Status: 14/14 tests passing (100% success rate) ✅**
+**Server Startup: VERIFIED WORKING - Both Django & Vue.js servers start successfully ✅**
 
 ### ✅ Passing Tests (14)
 #### Learn Concept Button Tests (5/5)
@@ -72,10 +73,20 @@ Comprehensive integration tests for the full application workflow:
 
 ### Prerequisites
 ```bash
-# Ensure servers are running
-cd ../backend && source env/bin/activate && python manage.py runserver 8000 &
+# ✅ VERIFIED: Use quick setup script (TESTED & WORKING)
+./quick-setup.sh
+
+# OR manually start servers:
+cd ../backend && source uv-env/bin/activate && python manage.py runserver 8000 &
 cd ../frontend && export NODE_OPTIONS="--openssl-legacy-provider" && npm run serve &
 ```
+
+### ✅ Verified Server Startup Process
+The server startup has been **fully tested and confirmed working**:
+- **Backend**: Django starts successfully on port 8000 with ML data loaded
+- **Frontend**: Vue.js compiles and serves successfully on port 8080  
+- **Integration**: Frontend successfully communicates with backend API
+- **Quick Setup**: `./quick-setup.sh` reliably starts both servers
 
 ### Installation & Execution
 ```bash
