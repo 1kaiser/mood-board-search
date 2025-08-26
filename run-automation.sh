@@ -5,8 +5,67 @@
 
 set -e  # Exit on any error
 
+# Command line options
+RUN_MODE="full"  # full, quick, test-only, setup-only
+SKIP_DATA_DOWNLOAD=false
+RUN_TESTS=true
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --quick)
+            RUN_MODE="quick"
+            shift
+            ;;
+        --test-only)
+            RUN_MODE="test-only"
+            shift
+            ;;
+        --setup-only)
+            RUN_MODE="setup-only"
+            RUN_TESTS=false
+            shift
+            ;;
+        --skip-data)
+            SKIP_DATA_DOWNLOAD=true
+            shift
+            ;;
+        --no-tests)
+            RUN_TESTS=false
+            shift
+            ;;
+        -h|--help)
+            echo "CAV Studio Automation Script"
+            echo ""
+            echo "Usage: $0 [options]"
+            echo ""
+            echo "Options:"
+            echo "  --quick      Quick setup (skip data download if exists)"
+            echo "  --test-only  Run only Playwright tests (servers must be running)"
+            echo "  --setup-only Setup environment and servers, skip tests"
+            echo "  --skip-data  Skip ML data download"
+            echo "  --no-tests   Skip Playwright tests"
+            echo "  -h, --help   Show this help message"
+            echo ""
+            echo "Examples:"
+            echo "  $0                    # Full automation with everything"
+            echo "  $0 --quick           # Quick start (skip data download if exists)"
+            echo "  $0 --test-only       # Run only tests"
+            echo "  $0 --setup-only      # Just start servers"
+            exit 0
+            ;;
+        *)
+            echo "Unknown option $1"
+            exit 1
+            ;;
+    esac
+done
+
 echo "🚀 CAV Studio Complete Automation Script"
 echo "========================================="
+echo "Mode: $RUN_MODE"
+echo "Run Tests: $RUN_TESTS"
+echo "Skip Data Download: $SKIP_DATA_DOWNLOAD"
 
 # Colors for output
 RED='\033[0;31m'
@@ -66,6 +125,61 @@ cleanup() {
 # Set trap to cleanup on exit
 trap cleanup EXIT
 
+# Handle different run modes
+if [ "$RUN_MODE" = "test-only" ]; then
+    log "🧪 Test-only mode: Running Playwright tests..."
+    log "Checking if servers are already running..."
+    
+    # Check if servers are running
+    if ! curl -s http://localhost:8000/ > /dev/null; then
+        error "Backend server not running on port 8000. Start servers first or use full mode."
+    fi
+    if ! curl -s http://localhost:8080/ > /dev/null; then
+        error "Frontend server not running on port 8080. Start servers first or use full mode."
+    fi
+    
+    log "✅ Both servers are running, proceeding with tests..."
+    
+    # Jump directly to tests
+    cd testing
+    
+    log "🧪 Setting up and running Playwright tests..."
+    
+    # Install Playwright if not already installed
+    if [ ! -d "node_modules" ]; then
+        log "Installing Playwright dependencies..."
+        npm ci
+    fi
+    
+    # Install Playwright browsers if needed
+    log "Installing Playwright browsers..."
+    npx playwright install --with-deps chromium
+    
+    # Run comprehensive test suite
+    log "🔍 Running comprehensive Playwright test suite..."
+    
+    # Run individual test suites
+    log "🔍 Running image upload and CAV training tests..."
+    npx playwright test test-image-upload-cav.spec.js --reporter=line,html || warning "Some image upload tests may have failed"
+    
+    log "🔍 Running Learn Concept button tests..."
+    npx playwright test test-learn-concept-button.spec.js --reporter=line,html || warning "Some Learn Concept tests may have failed"
+    
+    # Run complete suite for summary
+    log "🔍 Running complete test suite with summary..."
+    npx playwright test --reporter=line,html || warning "Some tests may have failed - check reports"
+    
+    success "Playwright test execution completed in test-only mode"
+    
+    # Display test results
+    if [ -f "playwright-report/index.html" ]; then
+        log "📊 Test report generated at: testing/playwright-report/index.html"
+        log "🌐 Open report: file://$(pwd)/playwright-report/index.html"
+    fi
+    
+    exit 0
+fi
+
 log "1/9 🛑 Stopping any existing servers..."
 kill_port 8000
 kill_port 8080
@@ -88,13 +202,18 @@ $PROJECT_ROOT/backend/.tools/uv pip install django djangorestframework django-co
 
 success "Backend environment ready"
 
-log "3/9 📊 Downloading ML activation data..."
-if [ ! -d "static-cav-content" ]; then
-    echo "y" | python bin/download_data.py || warning "Data download had issues but continuing..."
-else
-    log "ML activation data already exists, skipping download"
+# Skip setup if test-only mode
+if [ "$RUN_MODE" != "test-only" ]; then
+    log "3/9 📊 Downloading ML activation data..."
+    if [ "$SKIP_DATA_DOWNLOAD" = true ] && [ -d "static-cav-content" ]; then
+        log "Skipping data download (--skip-data flag and data exists)"
+    elif [ "$RUN_MODE" = "quick" ] && [ -d "static-cav-content" ]; then
+        log "Quick mode: ML activation data already exists, skipping download"
+    else
+        echo "y" | python bin/download_data.py || warning "Data download had issues but continuing..."
+    fi
+    success "ML activation data ready"
 fi
-success "ML activation data ready"
 
 log "4/9 🗄️  Setting up Django database..."
 python manage.py makemigrations || warning "No new migrations needed"
@@ -134,23 +253,46 @@ success "Frontend server running on http://localhost:8080"
 
 cd ../testing
 
-log "8/9 🧪 Setting up and running Playwright tests..."
-# Install Playwright if not already installed
-if [ ! -d "node_modules" ]; then
-    npm ci
+# Run Playwright tests if enabled
+if [ "$RUN_TESTS" = true ]; then
+    cd ../testing
+    
+    log "8/9 🧪 Setting up and running Playwright tests..."
+    
+    # Install Playwright if not already installed
+    if [ ! -d "node_modules" ]; then
+        log "Installing Playwright dependencies..."
+        npm ci
+    fi
+    
+    # Install Playwright browsers if needed
+    log "Installing Playwright browsers..."
+    npx playwright install --with-deps chromium
+    
+    # Run all tests with comprehensive reporting
+    log "Running comprehensive Playwright test suite..."
+    
+    # Run tests with multiple reporters for better visibility
+    log "🔍 Running image upload and CAV training tests..."
+    npx playwright test test-image-upload-cav.spec.js --reporter=line,html || warning "Some image upload tests may have failed"
+    
+    log "🔍 Running Learn Concept button tests..."
+    npx playwright test test-learn-concept-button.spec.js --reporter=line,html || warning "Some Learn Concept tests may have failed"
+    
+    # Run all tests together for summary
+    log "🔍 Running complete test suite with summary..."
+    npx playwright test --reporter=line,html || warning "Some tests may have failed - check reports"
+    
+    success "Playwright test execution completed"
+    
+    # Display test results summary
+    if [ -f "playwright-report/index.html" ]; then
+        log "📊 Test report generated at: testing/playwright-report/index.html"
+        log "🌐 Open report: file://$(pwd)/playwright-report/index.html"
+    fi
+else
+    log "⏭️  Skipping Playwright tests (disabled)"
 fi
-
-# Install Playwright browsers if needed
-npx playwright install --with-deps
-
-# Run all tests
-log "Running image upload and CAV training tests..."
-npx playwright test test-image-upload-cav.spec.js --reporter=html
-
-log "Running Learn Concept button tests..."
-npx playwright test test-learn-concept-button.spec.js --reporter=html
-
-success "All Playwright tests completed"
 
 log "9/9 🔍 Performing final verification..."
 

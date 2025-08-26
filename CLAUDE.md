@@ -1,17 +1,18 @@
 # Mood Board Search - Project Status
 
-## Current Status: ✅ FULLY OPERATIONAL WITH MODERN AUTOMATION (Latest Update: Aug 26, 2025)
+## Current Status: ✅ FULLY OPERATIONAL WITH ENHANCED AUTOMATION (Latest Update: Aug 26, 2025)
 
-The Mood Board Search (CAV Studio) project is **fully functional** with all critical issues resolved, modern uv-based automation implemented, comprehensive testing suite, and end-to-end functionality verified.
+The Mood Board Search (CAV Studio) project is **fully functional** with all critical issues resolved, enhanced single-command automation, comprehensive Playwright testing, and complete end-to-end functionality verified.
 
-### ✅ Critical Issues Resolved & Modern Features Added (Aug 26, 2025)
+### ✅ Critical Issues Resolved & Enhanced Automation Added (Aug 26, 2025)
 - **HTTP 500 EOFError COMPLETELY FIXED**: Downloaded 1.1GB of required ML activation data and models
 - **Learn Concept Button FULLY WORKING**: End-to-end CAV training workflow operational
+- **Enhanced Single-Command Automation**: Multiple script options with command-line flags
 - **Modern uv Integration**: Fast package manager with local installation (`backend/.tools/uv`)
-- **Single Command Automation**: Complete setup, testing, and verification via `./run-automation.sh`
+- **Comprehensive Playwright Testing**: Automated test execution with HTML reporting
+- **Quick Setup Scripts**: Fast server startup and dedicated test runners
 - **NumPy Compatibility**: Fixed HTTP 500 errors by ensuring `numpy<2.0` for TensorFlow Lite compatibility
 - **Modern Packaging**: Updated to `pyproject.toml` with comprehensive dependency management
-- **Comprehensive Testing Suite**: Added Playwright tests with full CAV functionality validation
 
 ### 🚀 Working Components (All Verified)
 - Django backend running on port 8000 ✅ 
@@ -32,19 +33,40 @@ Located in `./testing/` directory:
 
 ### 🔧 Modern Setup Commands
 
-#### 🚀 Automated Setup (Recommended)
+#### 🚀 Enhanced Single-Command Automation (Recommended)
+
+**Complete Automation:**
 ```bash
-# Single command handles everything
-./run-automation.sh
+./run-automation.sh                    # Full setup with everything
 ```
 
-This automation script provides:
+**Quick Start Options:**
+```bash
+./run-automation.sh --quick           # Quick setup (skip data if exists)
+./quick-setup.sh                      # Just start servers
+./run-tests.sh                        # Run comprehensive tests only
+./run-automation.sh --test-only       # Alternative test-only mode
+```
+
+**Command Options:**
+```bash
+./run-automation.sh [options]
+  --quick         Quick setup (skip data download if exists)
+  --test-only     Run only Playwright tests (servers must be running)
+  --setup-only    Setup environment and servers, skip tests
+  --skip-data     Skip ML data download
+  --no-tests      Skip Playwright tests
+  --help          Show help message
+```
+
+**What the automation provides:**
 - ✅ Modern uv environment setup with all dependencies
 - ✅ Automatic ML data download (1.1GB) 
 - ✅ Django backend startup (port 8000)
 - ✅ Vue.js frontend startup (port 8080)
-- ✅ Complete Playwright test suite execution
+- ✅ Comprehensive Playwright test suite execution with HTML reports
 - ✅ CAV training and Learn Concept functionality verification
+- ✅ Multiple execution modes for different use cases
 
 #### 📦 Manual Setup (Alternative)
 ```bash

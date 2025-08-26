@@ -83,18 +83,73 @@ To run CAVstudio, you'll need on your machine:
 
 First, clone this repository.
 
-#### 🚀 Automated Setup (Recommended - Single Command)
+#### 🚀 Single Command Options
+
+**Option 1: Complete Automation (Recommended)**
 ```bash
-# Complete automation with uv package manager
+# Full setup with everything: environment, data, servers, tests
 ./run-automation.sh
 ```
 
-This single command will:
+**Option 2: Quick Setup (Fast Start)**
+```bash
+# Quick setup - skip data download if it exists
+./run-automation.sh --quick
+```
+
+**Option 3: Just Start Servers**
+```bash
+# Start backend and frontend servers only (after initial setup)
+./quick-setup.sh
+```
+
+**Option 4: Run Tests Only**
+```bash
+# Run comprehensive Playwright tests (servers must be running)
+./run-tests.sh
+# OR
+./run-automation.sh --test-only
+```
+
+### 📋 Automation Script Options
+
+```bash
+./run-automation.sh [options]
+
+Options:
+  --quick         Quick setup (skip data download if exists)
+  --test-only     Run only Playwright tests (servers must be running)  
+  --setup-only    Setup environment and servers, skip tests
+  --skip-data     Skip ML data download
+  --no-tests      Skip Playwright tests
+  --help         Show help message
+
+Examples:
+  ./run-automation.sh                    # Full automation with everything
+  ./run-automation.sh --quick           # Quick start (skip data if exists)
+  ./run-automation.sh --test-only       # Run only tests
+  ./run-automation.sh --setup-only      # Just start servers
+```
+
+### 🎯 What Each Command Does
+
+**`./run-automation.sh`** (Full):
 - ✅ Set up modern uv environment with all dependencies
 - ✅ Download 1.1GB ML activation data automatically  
 - ✅ Start Django backend (port 8000) and Vue.js frontend (port 8080)
 - ✅ Run comprehensive Playwright test suite
 - ✅ Verify all CAV training and concept learning functionality
+
+**`./quick-setup.sh`** (Fast):
+- ✅ Start Django backend and Vue.js frontend servers
+- ✅ Health checks and status validation
+- ✅ Ready for immediate use
+
+**`./run-tests.sh`** (Testing):
+- ✅ Comprehensive Playwright test execution
+- ✅ Image upload and CAV training tests  
+- ✅ Learn Concept button navigation tests
+- ✅ HTML test report generation
 
 #### 📦 Manual Setup (Alternative)
 
