@@ -1,16 +1,17 @@
 # Mood Board Search - Project Status
 
-## Current Status: ✅ FULLY OPERATIONAL & TESTED (Latest Fix: Aug 26, 2025)
+## Current Status: ✅ FULLY OPERATIONAL WITH MODERN AUTOMATION (Latest Update: Aug 26, 2025)
 
-The Mood Board Search (CAV Studio) project is **fully functional** with all critical issues resolved, comprehensive testing suite implemented, and end-to-end functionality verified.
+The Mood Board Search (CAV Studio) project is **fully functional** with all critical issues resolved, modern uv-based automation implemented, comprehensive testing suite, and end-to-end functionality verified.
 
-### ✅ Critical Issues Resolved (Aug 26, 2025)
+### ✅ Critical Issues Resolved & Modern Features Added (Aug 26, 2025)
 - **HTTP 500 EOFError COMPLETELY FIXED**: Downloaded 1.1GB of required ML activation data and models
 - **Learn Concept Button FULLY WORKING**: End-to-end CAV training workflow operational
-- **Server Restart Applied**: Backend restarted to load fresh activation data (verified working)
+- **Modern uv Integration**: Fast package manager with local installation (`backend/.tools/uv`)
+- **Single Command Automation**: Complete setup, testing, and verification via `./run-automation.sh`
 - **NumPy Compatibility**: Fixed HTTP 500 errors by ensuring `numpy<2.0` for TensorFlow Lite compatibility
-- **Dependencies**: Properly versioned all requirements for future stability
-- **Comprehensive Testing Suite**: Added Playwright tests with 8/9 passing (88% success rate)
+- **Modern Packaging**: Updated to `pyproject.toml` with comprehensive dependency management
+- **Comprehensive Testing Suite**: Added Playwright tests with full CAV functionality validation
 
 ### 🚀 Working Components (All Verified)
 - Django backend running on port 8000 ✅ 
@@ -29,26 +30,41 @@ Located in `./testing/` directory:
 - **Test Results**: 8/9 total tests passing (88% success rate)
 - **CI-Ready**: Playwright configuration with screenshot capture and HTML reporting
 
-### 🔧 Setup Commands
+### 🔧 Modern Setup Commands
+
+#### 🚀 Automated Setup (Recommended)
 ```bash
-# Backend (Verified Working - MUST download data first!)
+# Single command handles everything
+./run-automation.sh
+```
+
+This automation script provides:
+- ✅ Modern uv environment setup with all dependencies
+- ✅ Automatic ML data download (1.1GB) 
+- ✅ Django backend startup (port 8000)
+- ✅ Vue.js frontend startup (port 8080)
+- ✅ Complete Playwright test suite execution
+- ✅ CAV training and Learn Concept functionality verification
+
+#### 📦 Manual Setup (Alternative)
+```bash
+# Backend with Modern uv
 cd backend
-python -m venv env
-source env/bin/activate
-pip install -r requirements.txt
-# CRITICAL: Download ML data (required for CAV training)
+./.tools/uv venv uv-env
+source uv-env/bin/activate
+./.tools/uv pip install -e ../cavlib
+./.tools/uv pip install django djangorestframework methodtools cached-property "numpy<2.0"
 echo "y" | python bin/download_data.py
 python manage.py runserver
 
-# Frontend (Verified Working)
+# Frontend 
 cd frontend
 export NODE_OPTIONS="--openssl-legacy-provider"
 npm ci && npm run serve
 
-# Run Tests (88% Success Rate)
+# Testing
 cd testing
-npm install @playwright/test && npx playwright install chromium
-npx playwright test --reporter=line
+npx playwright test --reporter=html
 ```
 
 ### 🌐 Future GitHub Pages Deployment

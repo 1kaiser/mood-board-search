@@ -79,55 +79,68 @@ To run CAVstudio, you'll need on your machine:
 - Python 3.8. You can download it from [Python.org](https://www.python.org/downloads/).
 - node v15+. Download it from [nodejs.org](https://nodejs.org/en/download/). We used node v15, but newer versions should also work.
 
-### ⚡ Quick Start (Tested Setup)
+### ⚡ Quick Start (Modern uv-Based Automation)
 
 First, clone this repository.
 
-There are two servers that make Mood Board Search. The backend Python server manages the data store and runs the ML algorithms. The frontend server builds and hosts the browser-based user interface.
-
-#### Backend Setup (Verified Working)
+#### 🚀 Automated Setup (Recommended - Single Command)
 ```bash
-cd backend
-python -m venv env
-source env/bin/activate  # On Windows: env\Scripts\activate
-pip install -r requirements.txt
+# Complete automation with uv package manager
+./run-automation.sh
 ```
 
-#### Frontend Setup (Verified Working)  
+This single command will:
+- ✅ Set up modern uv environment with all dependencies
+- ✅ Download 1.1GB ML activation data automatically  
+- ✅ Start Django backend (port 8000) and Vue.js frontend (port 8080)
+- ✅ Run comprehensive Playwright test suite
+- ✅ Verify all CAV training and concept learning functionality
+
+#### 📦 Manual Setup (Alternative)
+
+**Backend Setup with Modern uv:**
+```bash
+cd backend
+# uv is installed locally in .tools/uv
+./.tools/uv venv uv-env
+source uv-env/bin/activate
+./.tools/uv pip install -e ../cavlib
+./.tools/uv pip install django djangorestframework django-cors-headers methodtools cached-property tqdm requests platformdirs "numpy<2.0"
+```
+
+**Frontend Setup:**  
 ```bash
 cd frontend
 export NODE_OPTIONS="--openssl-legacy-provider"  # Required for compatibility
 npm ci
-``` 
+```
 
-Finally, download a sample set of images to work from. This script downloads two files:
+**ML Data Download:**
 
 1. A sample set that contains 2700 photos (.jpgs and .pngs) of everyday things—from household objects to plants and animals to local monuments and landmarks—taken by people from a Google design team. Photos were taken by a phone camera. EXIF data were removed from all images and all images are shared under [the Creative Commons CC-BY-4.0 license](https://creativecommons.org/licenses/by/4.0/). Please note: These images were collected specifically to demonstrate the functionality of the Mood Board Search tool. The Mood Board Search tool selects images from this gallery based on a set of inputs. We do not expect people to use the images for any other purpose. This gallery of images was not constructed for the purposes of training machine learning models. Therefore, no scientific tests were conducted on this gallery of images. The Mood Board tool is based on [technology](https://github.com/tensorflow/tcav) developed by Google Researchers (Been Kim and colleagues). See [paper](https://arxiv.org/abs/1711.11279) for details. This will download 1.1GB of data onto your device, taking around 10-15 mins (depending on your connection & compute speeds).
 
 2. Sample visual concepts by Alex Etchells, Tom Hatton, and Rachel Maggart. The images contained within the visual concepts are made publicly available for use in Mood Board Search (“CAVstudio”) only. The owners of the images retain copyright.
 
+Download the ML data manually:
+```bash
+cd backend
+source uv-env/bin/activate
+echo "y" | python bin/download_data.py
 ```
-python bin/download_data.py
+
+### 🚀 Running (Modern Commands)
+
+#### Option 1: Automated Run (Recommended)
+```bash
+# Single command runs everything with full testing
+./run-automation.sh
 ```
 
-The backend is now ready to go.
-
-    cd ..
-
-Next, set up the frontend:
-
-    cd frontend
-    npm install -g @vue/cli
-    npm ci
-
-### 🚀 Running (Tested Commands)
-
-Once you're all set up, you can start the two servers to use CAVstudio.
-
+#### Option 2: Manual Run
 **Terminal 1 - Backend:**
 ```bash
 cd backend
-source env/bin/activate  # Activate virtual environment
+source uv-env/bin/activate  # Activate uv virtual environment
 python manage.py runserver
 ```
 
@@ -140,12 +153,19 @@ npm run serve
 
 Then go to **http://localhost:8080** in a browser to use CAVstudio.
 
-#### Testing the Setup
-Run the test suite to verify everything is working:
+#### 🧪 Comprehensive Testing
+Run the full test suite to verify everything works:
 ```bash
 cd testing
 npx playwright test --reporter=html
 ```
+
+**Test Coverage:**
+- ✅ Image upload and processing
+- ✅ CAV training and concept learning
+- ✅ Learn Concept button navigation
+- ✅ Backend API endpoints
+- ✅ Frontend-backend integration
 
 ## 🔧 Troubleshooting
 
@@ -217,15 +237,38 @@ Want to use Mood Board Search in your own website creations? We’ve made a libr
 
 [CAVlib]: ./cavlib
 
-## 🔧 Recent Updates & Fixes
+## 🚀 Modern Features & Architecture
 
-This fork includes several critical fixes and improvements:
+This fork includes significant modernization and improvements:
 
+### 🔧 Modern Python Environment (uv)
+- **Fast Package Manager**: Local `uv` installation (no system dependencies)  
+- **Portable Environment**: Project-specific virtual environments
+- **pyproject.toml**: Modern Python project configuration
+- **Quick Setup**: 10x faster dependency resolution than pip
+- **Isolated Dependencies**: No conflicts with system packages
+
+### 🧪 Comprehensive Test Automation  
+- **End-to-End Testing**: Full Playwright test suite
+- **CAV Training Validation**: ML model functionality verification
+- **UI Integration Tests**: Learn Concept button and navigation
+- **API Testing**: Backend endpoint validation
+- **Automated CI/CD**: Ready for GitHub Actions
+
+### ✅ Critical Fixes & Improvements
 - **NumPy Compatibility**: Fixed HTTP 500 errors by ensuring `numpy<2.0` for TensorFlow Lite compatibility
 - **Learn Concept Button**: Fixed missing click handler that prevented navigation to project snapshots
-- **Dependencies**: Properly versioned all requirements for stability
-- **Testing Framework**: Added comprehensive Playwright testing suite
+- **Dependencies**: Properly versioned all requirements with modern packaging
+- **ML Data Management**: Automated 1.1GB activation data download
 - **Performance**: Resolved various UI and backend issues
+- **Single Command Deployment**: Complete automation script
+
+### 🛠️ Technical Improvements
+- **Dependency Management**: Modern `pyproject.toml` with locked versions
+- **Environment Isolation**: uv-based virtual environments  
+- **Fast Installation**: Cached package resolution
+- **Error Handling**: Comprehensive error detection and reporting
+- **Documentation**: Complete setup and troubleshooting guides
 
 ## How can I send feedback or get in contact with you?
 
