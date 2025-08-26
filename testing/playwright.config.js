@@ -15,23 +15,11 @@ module.exports = {
     {
       name: 'chromium',
       use: { 
-        ...require('@playwright/test').devices['Desktop Chrome'],
+        browserName: 'chromium',
         // Add extra time for slower operations
         navigationTimeout: 30000,
         actionTimeout: 10000,
       },
     },
-  ],
-  webServer: [
-    {
-      command: 'cd ../backend && source env/bin/activate && python manage.py runserver',
-      url: 'http://127.0.0.1:8000/api/ping_cav_server',
-      reuseExistingServer: !process.env.CI,
-    },
-    {
-      command: 'cd ../frontend && export NODE_OPTIONS="--openssl-legacy-provider" && npm run serve',
-      url: 'http://127.0.0.1:8080',
-      reuseExistingServer: !process.env.CI,
-    }
   ],
 };
